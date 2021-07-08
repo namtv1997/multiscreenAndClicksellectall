@@ -16,9 +16,6 @@ import kotlinx.android.synthetic.main.activity_linear_recycler_view.*
 
 class LinearRecyclerViewActivity : AppCompatActivity() {
 
-    private lateinit var progressDialog: CircleProgressDialog
-
-
     lateinit var itemsCells: ArrayList<HomeCashBack?>
     lateinit var loadMoreItemsCells: ArrayList<HomeCashBack?>
     var adapterLinear: AdapterHomeCashBack? = null
@@ -31,7 +28,6 @@ class LinearRecyclerViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_linear_recycler_view)
-        progressDialog = CircleProgressDialog(this)
         itemsCells = ArrayList()
         setAdapter()
 
@@ -67,9 +63,6 @@ class LinearRecyclerViewActivity : AppCompatActivity() {
                     }
                 })
 
-            loadingStatus.observe(this@LinearRecyclerViewActivity, Observer {
-                showOrHideProgressDialog(it)
-            })
         }
 
         sw.setOnRefreshListener {
@@ -78,19 +71,6 @@ class LinearRecyclerViewActivity : AppCompatActivity() {
         }
     }
 
-    fun showOrHideProgressDialog(isShow: Boolean) {
-        when (isShow) {
-            true -> progressDialog.show()
-            else -> progressDialog.dismiss()
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        progressDialog.cancel()
-    }
-
-
     private fun setAdapter() {
         adapterLinear = AdapterHomeCashBack(itemsCells)
         mLayoutManager = LinearLayoutManager(this)
@@ -98,7 +78,7 @@ class LinearRecyclerViewActivity : AppCompatActivity() {
             setHasFixedSize(true)
             layoutManager = mLayoutManager
             adapter = adapterLinear
-            scrollListener = RecyclerViewLoadMoreScroll(mLayoutManager as LinearLayoutManager).apply {
+            scrollListener = RecyclerViewLoadMoreScroll(layoutManager as LinearLayoutManager).apply {
                 setOnLoadMoreListener(object : OnLoadMoreListener {
                     override fun onLoadMore() {
                         isRefresh = false

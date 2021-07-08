@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.Build
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +36,7 @@ class AdapterHomeCashBack (private var itemsCells: ArrayList<HomeCashBack?>) :
 
     fun addLoadingView() {
         //add loading item
-        Handler().post {
+        Handler(Looper.getMainLooper()).post {
             itemsCells.add(null)
             notifyItemInserted(itemsCells.size - 1)
         }
